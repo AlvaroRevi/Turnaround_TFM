@@ -1,10 +1,18 @@
 import pandas as pd
 import numpy as np
+from openpyxl import load_workbook
+from datetime import datetime
 
-filepath = '/Users/alvaroreviriego/Desktop/Turnaround_TFM/Turnaround_simplificado.xlsx'
+filepath = 'Turnaround_simplificado.xlsx'
 sheet_name = 'LEBL_turnaround'
-csv_path = '/Users/alvaroreviriego/Desktop/Turnaround_TFM/LEBL_turnaround.csv'
-#raw_data = pd.read_excel(filepath, sheet_name=sheet_name)
-raw_data = pd.read_csv(csv_path, delimiter=';')
+path_LEBL_turn = 'LEBL_turnaround.csv'
+path_LEBL_dept = 'LEBL_departures.csv'
+path_LEBL_arr = 'LEBL_arrivals.csv'
+#raw_data = load_workbook(filepath, read_only=True)
+#sheet = raw_data[sheet_name]
 
-print("End")
+
+data_LEBL_turn = pd.read_csv(path_LEBL_turn, delimiter=";")
+data_LEBL_dept = pd.read_csv(path_LEBL_dept, delimiter=";")
+data_LEBL_arr = pd.read_csv(path_LEBL_arr, delimiter=";")
+print("END")
