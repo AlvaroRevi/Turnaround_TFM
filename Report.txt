@@ -1,0 +1,9 @@
+Las horas en Excel se dan como fraccion de un día, por lo que para hacer una resta 
+de dos horas que pertenecen a dias distintos (p.ej. 22:00 y 01:30 del dia siguiente), 
+se debe sumar 1 a la hora del dia siguiente. 
+NOTA: Quiaz esto tambien convenga meterlo así a la red neuronal 
+
+Siguientes pasos: 
+· Calcular la distancia desde el ADEP hasta el ADES y añadir la distancia a la red 
+· Descubrir que es stand 
+· Restar AIBT-ALDT (Taxi In time) y ATOT-AOBT(Taxo Out Time) y añadir a la red 
