@@ -3,11 +3,18 @@ de dos horas que pertenecen a dias distintos (p.ej. 22:00 y 01:30 del dia siguie
 se debe sumar 1 a la hora del dia siguiente. 
 NOTA: Quiaz esto tambien convenga meterlo así a la red neuronal 
 
+Progreso: 
+· Se ha procesado el Excel y se ha sacado una serie de csv para leer 
+· Se han metido las coordenadas de los distintos aeropuertos utilizando una base de datos de ICAO 
+· Se ha añadido la columna de TaxiInSeconds y de TaxiOutSeconds
+· Se ha creado una variable que guarda las columnas que queremos exportar por si en algun momento cambiaran 
+
 Siguientes pasos: 
 · Descubrir que es stand 
-· Restar AIBT-ALDT (Taxi In time) y ATOT-AOBT(Taxo Out Time) y añadir a la red
 · Para economizar tiempo, puedo hacer el preprocesado una unica vez y guardar los dataframes como csv 
   para que las siguientes veces solamente haya que correrlos una unica vez
+· Antes de guardar los dataframes en nuevos csv, hay que solucionar el problema de las coordenadas de los aeropuertos 
+· Meter todo en un bucle
 
 Problemas: 
 · Para añadir las columnas arrivalDistance y departureDistance hay aeropuertos cuyas coordenadas no ha reconocido 

@@ -53,3 +53,35 @@ def add_coordinates_and_distance(data_turnaround, airports_data):
         lambda row: geodesic((row['aerodromeLatitude'], row['aerodromeLongitude']),
                              (row['departureLatitude'], row['departureLongitude'])).kilometers, axis=1)
     return data_turnaround
+
+def compute_datetimes(data_turnaround):
+    '''
+    Añade una columna de fecha y hora combinadas para poder hacer calculos
+    :param data_turnaround:
+    :return: data_turnaround
+    '''
+    data_turnaround['aldtDateTime'] = pd.to_datetime(data_turnaround['aldtDate']+' '+data_turnaround['aldtTime'],
+                                                     format='%d/%m/%Y %H:%M:%S')
+    data_turnaround['aibtDateTime'] = pd.to_datetime(data_turnaround['aibtDate'] + ' ' + data_turnaround['aibtTime'],
+                                                     format='%d/%m/%Y %H:%M:%S')
+    data_turnaround['sibtDateTime'] = pd.to_datetime(data_turnaround['sibtDate'] + ' ' + data_turnaround['sibtTime'],
+                                                     format='%d/%m/%Y %H:%M:%S')
+    data_turnaround['sobtDateTime'] = pd.to_datetime(data_turnaround['sobtDate'] + ' ' + data_turnaround['sobtTime'],
+                                                     format='%d/%m/%Y %H:%M:%S')
+    data_turnaround['aobtDateTime'] = pd.to_datetime(data_turnaround['aobtDate'] + ' ' + data_turnaround['aobtTime'],
+                                                     format='%d/%m/%Y %H:%M:%S')
+    data_turnaround['atotDateTime'] = pd.to_datetime(data_turnaround['atotDate'] + ' ' + data_turnaround['atotTime'],
+                                                     format='%d/%m/%Y %H:%M:%S')
+
+    return data_turnaround
+
+def compute_taxi_times(data_turnaround):
+    '''
+    Calcula los tiempos de taxi al entrar y salir de pista
+    :param data_turnaround:
+    :return:
+    '''
+    data_turnaround['TaxiInSeconds'] = (data_turnaround['aibtDateTime'] - data_turnaround['aldtDateTime']).dt.total_seconds()
+    data_turnaround['TaxiOutSeconds'] = (data_turnaround['atotDateTime'] - data_turnaround['aobtDateTime']).dt.total_seconds()
+    return data_turnaround
+
