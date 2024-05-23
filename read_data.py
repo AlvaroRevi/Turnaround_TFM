@@ -11,6 +11,13 @@ from datetime import datetime
 airports_data = pd.read_csv('airports_data.csv', delimiter=",")
 # Nos quedamos unicamente con las columnas del dataframe que nos interesen
 airports_data = airports_data[['ident','latitude_deg','longitude_deg']]
+# Añadimos manualmente los aeropuertos que no salen en la lista
+SPJC_airport = {'ident': 'SPJC','latitude_deg': -12.0219444, 'longitude_deg': -77.1144444}
+LESJ_airport = {'ident': 'LESJ','latitude_deg': 39.5517 , 'longitude_deg':  2.7388}
+LERJ_airport = {'ident': 'LERJ','latitude_deg': 42.4605556 , 'longitude_deg':  -2.3205555555555555}
+new_entry = pd.DataFrame([SPJC_airport,LESJ_airport,LERJ_airport])
+
+airports_data = pd.concat([airports_data,new_entry])
 
 # Identificamos los archivos que queremos leer (meter en un bucle)
 airports_name = ['LEBL','LEMD','LEMH','LEST']

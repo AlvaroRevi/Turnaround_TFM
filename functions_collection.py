@@ -34,14 +34,6 @@ def add_coordinates_and_distance(data_turnaround, airports_data):
     data_turnaround.rename(columns={'latitude_deg': 'aerodromeLatitude', 'longitude_deg': 'aerodromeLongitude'},
                                 inplace=True)
 
-    # Llena los NaN de ceros
-    data_turnaround['aerodromeLatitude'] = data_turnaround['aerodromeLatitude'].fillna(0)
-    data_turnaround['aerodromeLongitude'] = data_turnaround['aerodromeLongitude'].fillna(0)
-    data_turnaround['arrivalLatitude'] = data_turnaround['arrivalLatitude'].fillna(0)
-    data_turnaround['arrivalLongitude'] = data_turnaround['arrivalLongitude'].fillna(0)
-    data_turnaround['departureLatitude'] = data_turnaround['departureLatitude'].fillna(0)
-    data_turnaround['departureLongitude'] = data_turnaround['departureLongitude'].fillna(0)
-
     aerodrome_coords = (data_turnaround['aerodromeLatitude'],data_turnaround['aerodromeLongitude'])
     arrival_coords = (data_turnaround['arrivalLatitude'], data_turnaround['arrivalLongitude'])
     departure_coords = (data_turnaround['departureLatitude'], data_turnaround['departureLongitude'])
