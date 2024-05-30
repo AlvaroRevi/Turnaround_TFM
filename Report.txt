@@ -13,12 +13,6 @@ Siguientes pasos:
 · Descubrir que es stand 
 · Para economizar tiempo, puedo hacer el preprocesado una unica vez y guardar los dataframes como csv 
   para que las siguientes veces solamente haya que correrlos una unica vez
-· Antes de guardar los dataframes en nuevos csv, hay que solucionar el problema de las coordenadas de los aeropuertos 
 · Meter todo en un bucle
 
-Problemas: 
-· Para añadir las columnas arrivalDistance y departureDistance hay aeropuertos cuyas coordenadas no ha reconocido 
-  del airports_data y las devuelve como NaN. De momento lo he parcheado poniendolas a 0 porque si no la funcion de 
-  la distancia no funcionaba, pero Hay que checkear que pasa con esos aeropuertos porque la distancia la calcula
-  igualmente, pero el dato es erroneo ya que esta cogiendo el punto de latitud 0 longitud 0 
 

@@ -34,10 +34,6 @@ def add_coordinates_and_distance(data_turnaround, airports_data):
     data_turnaround.rename(columns={'latitude_deg': 'aerodromeLatitude', 'longitude_deg': 'aerodromeLongitude'},
                                 inplace=True)
 
-    aerodrome_coords = (data_turnaround['aerodromeLatitude'],data_turnaround['aerodromeLongitude'])
-    arrival_coords = (data_turnaround['arrivalLatitude'], data_turnaround['arrivalLongitude'])
-    departure_coords = (data_turnaround['departureLatitude'], data_turnaround['departureLongitude'])
-
     data_turnaround['arrivalDistance'] = data_turnaround.apply(
         lambda row: geodesic((row['aerodromeLatitude'], row['aerodromeLongitude']), (row['arrivalLatitude'], row['arrivalLongitude'])).kilometers, axis=1)
 
