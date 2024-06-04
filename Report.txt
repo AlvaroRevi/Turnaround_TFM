@@ -6,13 +6,17 @@ NOTA: Quiaz esto tambien convenga meterlo así a la red neuronal
 Progreso: 
 · Se ha procesado el Excel y se ha sacado una serie de csv para leer 
 · Se han metido las coordenadas de los distintos aeropuertos utilizando una base de datos de ICAO 
+· Utilizando las coordenadas, se calcula la distancia del vuelo que llega o que se va
 · Se ha añadido la columna de TaxiInSeconds y de TaxiOutSeconds
 · Se ha creado una variable que guarda las columnas que queremos exportar por si en algun momento cambiaran 
 
+Problemas: 
+· Al exportar el dataframe correspondiente a LEMH_turnaround da un error al intentar convertir una fecha y hora. Sin embargo,
+se genera un csv igualmente. Al leer dicho csv se carga un dataframe con las mismas filas y columnas que el que se quería exportar, 
+pero si comparamos ambos dataframes (el que se exporta y el que se lee del csv supuestamente exportado) nos dice que hay algunas celdas 
+que no son iguales -> INVESTIGAR
+
 Siguientes pasos: 
 · Descubrir que es stand 
-· Para economizar tiempo, puedo hacer el preprocesado una unica vez y guardar los dataframes como csv 
-  para que las siguientes veces solamente haya que correrlos una unica vez
-· Meter todo en un bucle
-
-
+· Comprobar si el dataframe que se exporta del read_data es el mismo que lee luego es pd.read_csv para los distintos aeropuertos
+· Se puede intentar un primer modelo de LEMD o LEBL y dejar para más tarde el procesado de los datos de LEMH

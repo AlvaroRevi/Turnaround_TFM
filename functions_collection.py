@@ -69,7 +69,8 @@ def compute_taxi_times(data_turnaround):
     :param data_turnaround:
     :return:
     '''
-    data_turnaround['TaxiInSeconds'] = (data_turnaround['aibtDateTime'] - data_turnaround['aldtDateTime']).dt.total_seconds()
-    data_turnaround['TaxiOutSeconds'] = (data_turnaround['atotDateTime'] - data_turnaround['aobtDateTime']).dt.total_seconds()
+
+    data_turnaround['TaxiInSeconds'] = ((data_turnaround['aibtDateTime'] - data_turnaround['aldtDateTime']).dt.total_seconds())
+    data_turnaround['TaxiOutSeconds'] = ((data_turnaround['atotDateTime'] - data_turnaround['aobtDateTime']).dt.total_seconds())
     return data_turnaround
 

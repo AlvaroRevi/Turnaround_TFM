@@ -23,7 +23,7 @@ new_entry = pd.DataFrame([SPJC_airport,LESJ_airport,LERJ_airport])
 airports_data = pd.concat([airports_data,new_entry])
 
 # Identificamos los archivos que queremos leer (meter en un bucle)
-airports_list = ['LEBL','LEMD','LEMH','LEST']
+airports_list = ['LEMH','LEST','LEBL','LEMD']
 
 # Identificamos el nombre del aeropuerto que estamos estudiando
 for airport_turnaround in airports_list:
