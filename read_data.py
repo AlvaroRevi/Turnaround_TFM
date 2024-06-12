@@ -23,7 +23,7 @@ new_entry = pd.DataFrame([SPJC_airport,LESJ_airport,LERJ_airport])
 airports_data = pd.concat([airports_data,new_entry])
 
 # Identificamos los archivos que queremos leer (meter en un bucle)
-airports_list = ['LEMH','LEST','LEBL','LEMD']
+airports_list = ['LEMD','LEBL','LEMD','LEMH']
 
 # Identificamos el nombre del aeropuerto que estamos estudiando
 for airport_turnaround in airports_list:
@@ -33,16 +33,16 @@ for airport_turnaround in airports_list:
 
     #----------------------------------------------------------------- LEBL ------------------------------------------------
     # Leemos el data frame entero
-    data_turnaround_LEBL = pd.read_csv(path_turnaround_csv, delimiter=";")
+    data_turnaround = pd.read_csv(path_turnaround_csv, delimiter=";")
 
     # Añadimos las coordenadas de arrival y destination y calculamos ambas distancias
-    data_turnaround_LEBL = add_coordinates_and_distance(data_turnaround_LEBL, airports_data)
+    data_turnaround = add_coordinates_and_distance(data_turnaround, airports_data)
 
     # Añadimos los datetimes para poder hacer calculos
-    data_turnaround_LEBL = compute_datetimes(data_turnaround_LEBL)
+    data_turnaround = compute_datetimes(data_turnaround)
 
     # Calculamos los tiempos de 'Taxi In' y los tiempos de 'Taxi Out'
-    data_turnaround_LEBL = compute_taxi_times(data_turnaround_LEBL)
+    data_turnaround = compute_taxi_times(data_turnaround)
 
     # Elegimos las columnas que queremos exportar
     columns_to_export = ['aerodrome','aircraftRegistration','aircraftType','arrivalAdep','departureAdes','airline',
@@ -51,6 +51,6 @@ for airport_turnaround in airports_list:
                          'arrivalLongitude','departureLatitude','departureLongitude','arrivalDistance','departureDistance']
 
     # Exportamos las columnas del dataframe que nos interesen
-    data_frame_to_export = data_turnaround_LEBL[columns_to_export]
+    data_frame_to_export = data_turnaround[columns_to_export]
     data_frame_to_export.to_csv(output_name,index = False)
 print("END")
