@@ -9,14 +9,20 @@ Progreso:
 · Utilizando las coordenadas, se calcula la distancia del vuelo que llega o que se va
 · Se ha añadido la columna de TaxiInSeconds y de TaxiOutSeconds
 · Se ha creado una variable que guarda las columnas que queremos exportar por si en algun momento cambiaran 
+· Se ha exportado toda la data a csv 
+· Se han creado los primeros modelos (randomforest y redes neuronales)
+· Se ha descubierto la forma de serializar los modelos 
+· Creamos una carpeta llamada Data donde metemos todos los csv y una que se llama Output donde meteremos todos los modelos serializados
 
 Problemas: 
-· Al exportar el dataframe correspondiente a LEMH_turnaround da un error al intentar convertir una fecha y hora. Sin embargo,
-se genera un csv igualmente. Al leer dicho csv se carga un dataframe con las mismas filas y columnas que el que se quería exportar, 
-pero si comparamos ambos dataframes (el que se exporta y el que se lee del csv supuestamente exportado) nos dice que hay algunas celdas 
-que no son iguales -> INVESTIGAR
 
 Siguientes pasos: 
-· Descubrir que es stand 
-· Comprobar si el dataframe que se exporta del read_data es el mismo que lee luego es pd.read_csv para los distintos aeropuertos
-· Se puede intentar un primer modelo de LEMD o LEBL y dejar para más tarde el procesado de los datos de LEMH
+· Comprobar que el serializador funciona y cargan bien los modelos
+· Comprobar que los modelos hacen lo que nosotros queremos 
+· ¿Qué métricas nos pueden servir en este modelo?
+· ¿Cuál va a ser el output de nuestro modelo? 
+     --> Herramienta que pueda dar una distribución de probabilidad metiendole de input distintas features (que nos daría un hipotético aeropuerto)
+
+· Una vez aclaremos todas las dudas anteriores, se metería en un bucle y se lanzarían simulaciones en batch para afinar el resultado
+  --> Sugerencia para cuando lancemos en batch es hacer un csv similar al que guardo del TFG
+· De momento solo estamos utilizando el aeropuerto de Madrid, habría que probar en el resto con los mismos modelos, o combinarlos

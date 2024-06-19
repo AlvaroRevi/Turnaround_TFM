@@ -1,0 +1,5 @@
+# Ignorar archivos .pkl
+*.pkl
+
+# Ignorar archivos .keras
+*.keras
