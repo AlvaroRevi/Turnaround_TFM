@@ -4,11 +4,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.optimizers import Adam
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-
-# Path del modelo que queremos cargar
-model_path = 'model_randomforest.pkl'
-
 
 # Importamos los datos de los csv procesados previamente
 
@@ -70,16 +70,16 @@ y = data['realTurnaroundSeconds']
 
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)
 
-# ------------- RANDOM FOREST REGRESSOR ---------------
+#------------- KERAS MODEL ---------------
+model_path = 'model_tensorflow_1.keras'
 
-model = joblib.load(model_path)
+model = tf.keras.models.load_model(model_path)
 
-y_pred_RF = model.predict(X_test)
-mse_RF = mean_squared_error(y_test, y_pred_RF)
-mae_RF = mean_absolute_error(y_test, y_pred_RF)
-r2_RF = r2_score(y_test, y_pred_RF)
+y_pred_tf = model.predict(X_test)
+mse_tf = mean_squared_error(y_test, y_pred_tf)
+mae_tf = mean_absolute_error(y_test, y_pred_tf)
+r2_tf = r2_score(y_test, y_pred_tf)
 
-print(f'Loaded MSE: {mse_RF}')
-print(f'Loaded MAE: {mae_RF}')
-print(f'Loaded R²: {r2_RF}')
-
+print(f'Loaded MSE: {mse_tf}')
+print(f'Loaded MAE: {mae_tf}')
+print(f'Loaded R²: {r2_tf}')
