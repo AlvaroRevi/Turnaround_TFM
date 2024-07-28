@@ -12,8 +12,10 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, r
 
 # Importamos los datos de los csv procesados previamente
 
+# Importamos los datos de los csv procesados previamente
+
 # LEBL_df = pd.read_csv('LEBL_turnaround_processed.csv')
-LEMD_df = pd.read_csv('.\..\Data\LEMD_turnaround_processed.csv')
+LEMD_df = pd.read_csv('..\Data\LEMD_turnaround_processed.csv')
 # LEMH_df = pd.read_csv('LEMH_turnaround_processed.csv')
 # LEST_df = pd.read_csv('LEST_turnaround_processed.csv')
 
@@ -63,7 +65,9 @@ data[numerical_features] = scaler.fit_transform(data[numerical_features])
 # Seleccion de caracteristicas
 
 X = data.drop(columns=['aerodrome','arrivalAdep','departureAdes','realTurnaroundSeconds',
-                       'aldtDateTime','aibtDateTime','sobtDateTime','aobtDateTime','atotDateTime'])
+                       'aldtDateTime','aibtDateTime','sobtDateTime','aobtDateTime','atotDateTime','TaxiInSeconds',
+                       'TaxiOutSeconds','arrivalLatitude','arrivalLongitude','departureLatitude','departureLongitude'])
+
 y = data['realTurnaroundSeconds']
 
 # Division de datos
@@ -71,17 +75,17 @@ y = data['realTurnaroundSeconds']
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)
 
 #------------- KERAS MODEL ---------------
-model_path = 'model_tensorflow_1.keras'
+model_path = 'model_tensorflow_2.keras'
 
 model = tf.keras.models.load_model(model_path)
 
 y_pred_tf = model.predict(X_test)
 mse_tf = mean_squared_error(y_test, y_pred_tf)
-rmse_tf = root_mean_squared_error(y_test, y_pred_tf)
+rmse_tf = root_mean_squared_error(y_test,y_pred_tf)
 mae_tf = mean_absolute_error(y_test, y_pred_tf)
 r2_tf = r2_score(y_test, y_pred_tf)
 
 print(f'Loaded MSE: {mse_tf}')
-print(f'Loaded RMSE: {rmse_tf}')
+print(f'Loaded RMSE:  {rmse_tf}')
 print(f'Loaded MAE: {mae_tf}')
 print(f'Loaded R²: {r2_tf}')

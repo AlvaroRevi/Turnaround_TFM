@@ -1,19 +1,19 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-import joblib
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import Adam
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, root_mean_squared_error
-
+'''
+Este script es una replica del modelo numero 2 en el que se filtran unicamente los datos de vuelos para la aerolinea
+Iberia (IBE), lo cual puede ayudarnos de cara a una implementación estrategica
+'''
 # Importamos los datos de los csv procesados previamente
 
 # LEBL_df = pd.read_csv('LEBL_turnaround_processed.csv')
-LEMD_df = pd.read_csv('.\..\Data\LEMD_turnaround_processed.csv')
+LEMD_df = pd.read_csv('..\Data\LEMD_turnaround_processed.csv')
 # LEMH_df = pd.read_csv('LEMH_turnaround_processed.csv')
 # LEST_df = pd.read_csv('LEST_turnaround_processed.csv')
 
@@ -47,7 +47,8 @@ data['atot_hour'] = data['atotDateTime'].dt.hour
 
 
 # Codificacion de variables categoricas
-data = pd.get_dummies(data, columns = ['aircraftRegistration','aircraftType','airline'])
+data = data[data['airline'] == 'AEA']
+data = pd.get_dummies(data, columns = ['aircraftRegistration','aircraftType'])
 
 
 
@@ -62,8 +63,10 @@ data[numerical_features] = scaler.fit_transform(data[numerical_features])
 
 # Seleccion de caracteristicas
 
-X = data.drop(columns=['aerodrome','arrivalAdep','departureAdes','realTurnaroundSeconds',
-                       'aldtDateTime','aibtDateTime','sobtDateTime','aobtDateTime','atotDateTime'])
+X = data.drop(columns=['aerodrome','airline','arrivalAdep','departureAdes','realTurnaroundSeconds',
+                       'aldtDateTime','aibtDateTime','sobtDateTime','aobtDateTime','atotDateTime','TaxiInSeconds',
+                       'TaxiOutSeconds','arrivalLatitude','arrivalLongitude','departureLatitude','departureLongitude'])
+
 y = data['realTurnaroundSeconds']
 
 # Division de datos
@@ -71,17 +74,17 @@ y = data['realTurnaroundSeconds']
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2, random_state=42)
 
 #------------- KERAS MODEL ---------------
-model_path = 'model_tensorflow_1.keras'
+model_path = 'model_tensorflow_filter_AEA.keras'
 
 model = tf.keras.models.load_model(model_path)
 
 y_pred_tf = model.predict(X_test)
 mse_tf = mean_squared_error(y_test, y_pred_tf)
-rmse_tf = root_mean_squared_error(y_test, y_pred_tf)
+rmse_tf = root_mean_squared_error(y_test,y_pred_tf)
 mae_tf = mean_absolute_error(y_test, y_pred_tf)
 r2_tf = r2_score(y_test, y_pred_tf)
 
 print(f'Loaded MSE: {mse_tf}')
-print(f'Loaded RMSE: {rmse_tf}')
+print(f'Loaded RMSE:  {rmse_tf}')
 print(f'Loaded MAE: {mae_tf}')
 print(f'Loaded R²: {r2_tf}')
