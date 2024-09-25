@@ -1,25 +1,23 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-import joblib
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.optimizers import Adam
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, root_mean_squared_error
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Importamos los datos de los csv procesados previamente
 
-# LEBL_df = pd.read_csv('LEBL_turnaround_processed.csv')
-LEMD_df = pd.read_csv('.\..\Data\LEMD_turnaround_processed.csv')
+# Importamos los datos de los csv procesados previamente
+
+#LEBL_df = pd.read_csv('..\Data\LEBL_turnaround_processed.csv')
+LEMD_df = pd.read_csv('..\Data\LEMD_turnaround_processed.csv')
 # LEMH_df = pd.read_csv('LEMH_turnaround_processed.csv')
 # LEST_df = pd.read_csv('LEST_turnaround_processed.csv')
 
 data = LEMD_df
+# data = data[(data['realTurnaroundSeconds'] >= 3300) & (data['realTurnaroundSeconds'] <= 11400)]
+
 
 # Convertir fecha y hora
 date_columns = ['aldtDateTime', 'aibtDateTime', 'sobtDateTime', 'aobtDateTime', 'atotDateTime']
@@ -65,9 +63,10 @@ data[numerical_features] = scaler.fit_transform(data[numerical_features])
 # Seleccion de caracteristicas
 
 X = data.drop(columns=['aerodrome','arrivalAdep','departureAdes','realTurnaroundSeconds',
-                       'aldtDateTime','aibtDateTime','sobtDateTime','aobtDateTime','atotDateTime'])
-y = data['realTurnaroundSeconds']
+                       'aldtDateTime','aibtDateTime','sobtDateTime','aobtDateTime','atotDateTime','TaxiInSeconds',
+                       'TaxiOutSeconds','arrivalLatitude','arrivalLongitude','departureLatitude','departureLongitude'])
 
+y = data['realTurnaroundSeconds']
 scaler_y = StandardScaler()
 y_reshaped = y.values.reshape(-1,1)
 y_scaled = scaler_y.fit_transform(y_reshaped)
@@ -77,7 +76,9 @@ y_scaled = scaler_y.fit_transform(y_reshaped)
 X_train, X_test, y_train, y_test = train_test_split(X,y_scaled,test_size=0.2, random_state=42)
 
 #------------- KERAS MODEL ---------------
-model_path = 'model_tensorflow_1.keras'
+model_path = 'model_tensorflow_2.keras'
+
+
 
 model = tf.keras.models.load_model(model_path)
 
@@ -102,7 +103,7 @@ sns.histplot(y_test_original, kde=True, color='blue', bins=30)
 plt.title('Actual value distribution')
 plt.xlabel('Turnaround Time (seconds)')
 plt.ylabel('Frecuency')
-plt.ylim(0.,12000)
+plt.ylim(0,12000)
 
 # Histograma de las predicciones
 plt.subplot(1, 2, 2)

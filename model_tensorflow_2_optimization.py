@@ -1,0 +1,149 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.optimizers import Adam
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, root_mean_squared_error
+import csv
+'''
+En este script utilizamos un modelo de redes neuronales Sequential con los siguientes features:
+        -TaxiInSeconds
+        -TaxiOutSeconds
+        -scheduleTurnaroundSeconds
+        -arrivalDistance
+        -departureDistance
+        -Actual dates and times
+        -aircraftRegistration
+        -airline 
+        -aircraftType
+'''
+# Importamos los datos de los csv procesados previamente
+
+# LEBL_df = pd.read_csv('LEBL_turnaround_processed.csv')
+LEMD_df = pd.read_csv('.\Data\LEMD_turnaround_processed.csv')
+# LEMH_df = pd.read_csv('LEMH_turnaround_processed.csv')
+# LEST_df = pd.read_csv('LEST_turnaround_processed.csv')
+
+data = LEMD_df
+
+# Convertir fecha y hora
+date_columns = ['aldtDateTime', 'aibtDateTime', 'sobtDateTime', 'aobtDateTime', 'atotDateTime']
+for col in date_columns:
+    data[col] = pd.to_datetime(data[col])
+
+# Crear características adicionales a partir de las fechas
+data['aldt_month'] = data['aldtDateTime'].dt.month
+data['aldt_day_of_week'] = data['aldtDateTime'].dt.dayofweek
+data['aldt_hour'] = data['aldtDateTime'].dt.hour
+
+data['aibt_month'] = data['aibtDateTime'].dt.month
+data['aibt_day_of_week'] = data['aibtDateTime'].dt.dayofweek
+data['aibt_hour'] = data['aibtDateTime'].dt.hour
+
+data['sobt_month'] = data['sobtDateTime'].dt.month
+data['sobt_day_of_week'] = data['sobtDateTime'].dt.dayofweek
+data['sobt_hour'] = data['sobtDateTime'].dt.hour
+
+data['aobt_month'] = data['aobtDateTime'].dt.month
+data['aobt_day_of_week'] = data['aobtDateTime'].dt.dayofweek
+data['aobt_hour'] = data['aobtDateTime'].dt.hour
+
+data['atot_month'] = data['atotDateTime'].dt.month
+data['atot_day_of_week'] = data['atotDateTime'].dt.dayofweek
+data['atot_hour'] = data['atotDateTime'].dt.hour
+
+# Codificacion de variables categoricas
+data = pd.get_dummies(data, columns=['aircraftRegistration', 'aircraftType', 'airline'])
+
+numerical_features = ['TaxiInSeconds', 'TaxiOutSeconds', 'scheduleTurnaroundSeconds',
+                      'arrivalLatitude', 'arrivalLongitude', 'departureLatitude', 'departureLongitude',
+                      'arrivalDistance',
+                      'departureDistance', 'aldt_month', 'aldt_day_of_week', 'aldt_hour', 'aibt_month',
+                      'aibt_day_of_week',
+                      'aibt_hour', 'sobt_month', 'sobt_day_of_week', 'sobt_hour', 'aobt_month', 'aobt_day_of_week',
+                      'aobt_hour', 'atot_month', 'atot_day_of_week', 'atot_hour']
+scaler = StandardScaler()
+
+data[numerical_features] = scaler.fit_transform(data[numerical_features])
+
+# Seleccion de caracteristicas
+
+X = data.drop(columns=['aerodrome', 'arrivalAdep', 'departureAdes', 'realTurnaroundSeconds',
+                       'aldtDateTime', 'aibtDateTime', 'sobtDateTime', 'aobtDateTime', 'atotDateTime', 'TaxiInSeconds',
+                       'TaxiOutSeconds', 'arrivalLatitude', 'arrivalLongitude', 'departureLatitude',
+                       'departureLongitude'])
+
+y = data['realTurnaroundSeconds']
+
+scaler_y = StandardScaler()
+y_reshaped = y.values.reshape(-1,1)
+y_scaled = scaler_y.fit_transform(y_reshaped)
+
+# Division de datos
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_scaled, test_size=0.2, random_state=42)
+
+
+# Definimos los hiperparametros
+
+batch_size_v = [32,64,128]
+epochs_v = [100,200]
+neurons_1_v = [64,128]
+neurons_2_v = [64,128]
+learning_rate_v =  [0.001,0.01,0.1]
+
+counter = 0
+# Crear un archivo CSV y escribir el encabezado
+with open('grid_search_results.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['BatchSize', 'Epochs', 'Neurons1', 'Neurons2', 'LearningRate', 'MSE', 'RMSE', 'MAE', 'R^2'])
+
+    for batch_size in batch_size_v:
+        for epochs in epochs_v:
+            for neurons_1 in neurons_1_v:
+                for neurons_2 in neurons_2_v:
+                    for learning_rate in learning_rate_v:
+
+                        counter = counter+1
+
+
+                        # Construcción del modelo de red neuronal
+                        model = Sequential()
+                        model.add(Dense(neurons_1, input_dim=X_train.shape[1], activation='relu'))
+                        model.add(Dropout(0.2))
+                        model.add(Dense(neurons_2, activation='relu'))
+                        model.add(Dropout(0.2))
+                        model.add(Dense(32, activation='relu'))
+                        model.add(Dense(1, activation='linear'))
+
+                        # Compilación del modelo
+                        model.compile(optimizer=Adam(learning_rate=learning_rate), loss='mean_squared_error')
+
+                        # Entrenamiento del modelo
+                        history = model.fit(X_train, y_train, validation_split=0.2, epochs=epochs, batch_size=batch_size, verbose=1)
+
+                        # Evaluación del modelo
+                        y_pred = model.predict(X_test)
+
+                        y_test_original = scaler_y.inverse_transform(y_test)
+                        y_pred_original = scaler_y.inverse_transform(y_pred)
+
+                        mse = mean_squared_error(y_test_original, y_pred_original)
+                        rmse = root_mean_squared_error(y_test_original,y_pred_original)
+                        mae = mean_absolute_error(y_test_original, y_pred_original)
+                        r2 = r2_score(y_test_original, y_pred_original)
+
+                        # print(f'MSE: {mse}')
+                        # print(f'RMSE:{rmse}')
+                        # print(f'MAE: {mae}')
+                        # print(f'R²: {r2}')
+
+                        writer.writerow([batch_size,epochs,neurons_1,neurons_2,learning_rate,mse,rmse,mae,r2])
+                        # Serializamos el modelo para poder cargarlo en otro momento
+
+                        output_model_path = f'.\Output\model_tensorflow_optimization_{counter}.keras'
+                        model.save(output_model_path)
+
+                        print("END")

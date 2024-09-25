@@ -17,7 +17,6 @@ Progreso:
 Problemas: 
 
 Siguientes pasos: 
-· Comprobar que el serializador funciona y cargan bien los modelos
 · Comprobar que los modelos hacen lo que nosotros queremos 
 · ¿Qué métricas nos pueden servir en este modelo?
 · ¿Cuál va a ser el output de nuestro modelo? 
@@ -26,3 +25,13 @@ Siguientes pasos:
 · Una vez aclaremos todas las dudas anteriores, se metería en un bucle y se lanzarían simulaciones en batch para afinar el resultado
   --> Sugerencia para cuando lancemos en batch es hacer un csv similar al que guardo del TFG
 · De momento solo estamos utilizando el aeropuerto de Madrid, habría que probar en el resto con los mismos modelos, o combinarlos
+
+
+
+Explicacion modelos 
+model_tensorflow_1 --> Usando todas las features (aeropuerto LEMD)
+model_tensorflow_2 --> Quitando las features de TaxiInSeconds, arrivalLatitude, arrivalLongitude, departureLatitude, departureLongitude 
+model_tensorflow_pca --> Quitando las features de TaxiInSeconds, arrivalLatitude, arrivalLongitude, departureLatitude, departureLongitude, scheduleTurnaroundSeconds, 
+                         y las horas de atot, aldt, aibt, etc
+
+
